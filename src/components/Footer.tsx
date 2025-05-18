@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const Footer = () => {
@@ -10,9 +11,9 @@ const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-nexfab-purple to-nexfab-purple-light bg-clip-text text-transparent mb-4">Nexfab</h3>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-nexfab-purple to-nexfab-purple-light bg-clip-text text-transparent mb-4">Nexfab.ai</h3>
             <p className="text-white/60 mb-4">
-              The ultimate dashboard for managing your Superlens.ai analytics platform.
+              Empowering businesses with AI-powered analytics and solutions for intelligent decision making.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">
@@ -39,9 +40,9 @@ const Footer = () => {
           </div>
           
           <div className="col-span-1">
-            <h4 className="font-bold mb-4">Product</h4>
+            <h4 className="font-bold mb-4">Products</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Features</a></li>
+              <li><Link to="/products/superlens" className="text-white/60 hover:text-nexfab-purple transition-colors">Superlens.ai</Link></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Pricing</a></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Case Studies</a></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Documentation</a></li>
@@ -51,10 +52,10 @@ const Footer = () => {
           <div className="col-span-1">
             <h4 className="font-bold mb-4">Company</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">About</a></li>
+              <li><Link to="/about" className="text-white/60 hover:text-nexfab-purple transition-colors">About Us</Link></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Careers</a></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Blog</a></li>
-              <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Contact</a></li>
+              <li><Link to="/contact" className="text-white/60 hover:text-nexfab-purple transition-colors">Contact Us</Link></li>
             </ul>
           </div>
           
@@ -62,7 +63,7 @@ const Footer = () => {
             <h4 className="font-bold mb-4">Resources</h4>
             <ul className="space-y-2">
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Help Center</a></li>
-              <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">API</a></li>
+              <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">API Documentation</a></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Status</a></li>
               <li><a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors">Community</a></li>
             </ul>
@@ -71,7 +72,7 @@ const Footer = () => {
         
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-white/60 text-sm">
-            © {currentYear} Nexfab. All rights reserved.
+            © {currentYear} Nexfab.ai. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors text-sm">
@@ -81,7 +82,7 @@ const Footer = () => {
               Terms of Service
             </a>
             <a href="#" className="text-white/60 hover:text-nexfab-purple transition-colors text-sm">
-              Cookies
+              Cookie Policy
             </a>
           </div>
         </div>
