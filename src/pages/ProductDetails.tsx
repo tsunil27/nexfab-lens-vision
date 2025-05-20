@@ -21,14 +21,14 @@ const ProductDetails = () => {
         {/* Key Benefits Section */}
         <KeyBenefits />
 
+        {/* SuperLens AI Assistant Video Demo Section */}
+        <SuperlensAIAssistant />
+
         {/* Features Section */}
         <ProductFeatures />
 
         {/* Dashboard Demo Section */}
         <DashboardDemo />
-
-        {/* SuperLens AI Assistant Section */}
-        <SuperlensAIAssistant />
 
         {/* Pricing Section */}
         <PricingSection />

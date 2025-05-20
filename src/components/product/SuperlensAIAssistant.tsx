@@ -1,9 +1,7 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ChartContainer, 
-  ChartTooltip, 
-  ChartTooltipContent 
+  ChartTooltipContent
 } from '@/components/ui/chart';
 import { 
   LineChart, 
@@ -11,7 +9,6 @@ import {
   XAxis, 
   YAxis, 
   CartesianGrid, 
-  ResponsiveContainer,
   Tooltip,
   Legend
 } from 'recharts';
@@ -26,8 +23,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { BarChart3, LineChart as LineChartIcon, MessageSquare, Send, ArrowRight } from 'lucide-react';
+import { BarChart3, LineChart as LineChartIcon, MessageSquare, ArrowRight, Play, Pause } from 'lucide-react';
 
 // Revenue data for chart
 const revenueData = [
@@ -85,12 +81,28 @@ const chartConfig = {
   },
 };
 
-// Query suggestions
-const querySuggestions = [
-  "Show me the incremental revenue month by month over the last 6 months",
-  "Analyze customer engagement for last month",
-  "What are the top 3 growth opportunities for my business?",
-  "Compare conversion rates between marketing channels"
+// Predefined query sequence for video-like demo
+const demoQueries = [
+  {
+    query: "Show me the incremental revenue month by month over the last 6 months",
+    view: 'revenue',
+    typingTime: 1200
+  },
+  {
+    query: "Analyze customer engagement for last month",
+    view: 'engagement',
+    typingTime: 1000
+  },
+  {
+    query: "What are the top 3 growth opportunities for my business?",
+    view: 'default',
+    typingTime: 1400
+  },
+  {
+    query: "Compare conversion rates between marketing channels",
+    view: 'default',
+    typingTime: 1300
+  }
 ];
 
 const SuperlensAIAssistant = () => {
@@ -99,7 +111,70 @@ const SuperlensAIAssistant = () => {
   const [currentView, setCurrentView] = useState<'revenue' | 'engagement' | 'default'>('default');
   const [isLoading, setIsLoading] = useState(false);
   
+  const [isAutoplaying, setIsAutoplaying] = useState(false);
+  const [currentDemoIndex, setCurrentDemoIndex] = useState(0);
+  const [displayedQuery, setDisplayedQuery] = useState("");
+  const [typingInProgress, setTypingInProgress] = useState(false);
+  const [demoStage, setDemoStage] = useState<'typing' | 'loading' | 'result'>('typing');
+  
+  // Function to handle a single query demo step
+  const runQueryDemo = (index: number) => {
+    if (index >= demoQueries.length) {
+      setCurrentDemoIndex(0);
+      return;
+    }
+    
+    const currentDemo = demoQueries[index];
+    setDisplayedQuery("");
+    setTypingInProgress(true);
+    setDemoStage('typing');
+    
+    // Simulate typing effect
+    let i = 0;
+    const typingInterval = setInterval(() => {
+      if (i <= currentDemo.query.length) {
+        setDisplayedQuery(currentDemo.query.substring(0, i));
+        i++;
+      } else {
+        clearInterval(typingInterval);
+        setTypingInProgress(false);
+        setActiveQuery(currentDemo.query);
+        setDemoStage('loading');
+        setIsLoading(true);
+        
+        // Simulate loading time before showing results
+        setTimeout(() => {
+          setIsLoading(false);
+          setCurrentView(currentDemo.view);
+          setDemoStage('result');
+          
+          // If autoplaying, continue to next query after a delay
+          if (isAutoplaying) {
+            setTimeout(() => {
+              setCurrentDemoIndex((prev) => prev + 1);
+              runQueryDemo(index + 1);
+            }, 4000); // Show result for 4 seconds before moving to next query
+          }
+        }, 1500);
+      }
+    }, 50); // Speed of typing
+  };
+  
+  // Handle autoplay toggle
+  const toggleAutoplay = () => {
+    const newAutoplayState = !isAutoplaying;
+    setIsAutoplaying(newAutoplayState);
+    
+    if (newAutoplayState) {
+      runQueryDemo(currentDemoIndex);
+    }
+  };
+  
+  // Handle manual query submission
   const handleQuerySubmit = (predefinedQuery = "") => {
+    // Stop any ongoing autoplay
+    setIsAutoplaying(false);
+    
     const queryToProcess = predefinedQuery || query;
     setIsLoading(true);
     setActiveQuery(queryToProcess);
@@ -119,6 +194,19 @@ const SuperlensAIAssistant = () => {
     }, 1500);
   };
 
+  // Effect to handle the demo playback state changes
+  useEffect(() => {
+    if (isAutoplaying && !typingInProgress && demoStage === 'result') {
+      const timeout = setTimeout(() => {
+        const nextIndex = (currentDemoIndex + 1) % demoQueries.length;
+        setCurrentDemoIndex(nextIndex);
+        runQueryDemo(nextIndex);
+      }, 4000); // Show each result for 4 seconds
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [isAutoplaying, currentDemoIndex, typingInProgress, demoStage]);
+
   return (
     <section className="py-20 bg-nexfab-darker/50">
       <div className="container mx-auto px-4">
@@ -131,43 +219,82 @@ const SuperlensAIAssistant = () => {
           </p>
         </div>
 
-        {/* Query Interface */}
-        <Card className="bg-nexfab-dark border-white/10 mb-10">
+        {/* Video-like Demo Interface */}
+        <Card className="bg-nexfab-dark border-white/10 mb-10 shadow-xl">
           <CardContent className="p-6">
-            <div className="mb-6 rounded-lg bg-white/5 p-4 flex flex-col">
-              <div className="flex items-center justify-between mb-3">
+            <div className="mb-6 rounded-lg bg-black/40 p-4 flex flex-col overflow-hidden">
+              {/* Video-like Controls */}
+              <div className="flex items-center justify-between mb-3 border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                  <span className="ml-2 font-medium">SuperLens AI Assistant</span>
+                  <span className="ml-2 font-medium">SuperLens AI Assistant - Demo</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    onClick={toggleAutoplay} 
+                    variant="outline" 
+                    size="sm"
+                    className="flex items-center gap-1 border-white/20 hover:bg-white/10"
+                  >
+                    {isAutoplaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    {isAutoplaying ? 'Pause Demo' : 'Play Demo'}
+                  </Button>
                 </div>
               </div>
               
-              <div className="flex-grow">
+              <div className="flex-grow min-h-[480px] relative">
+                {/* Video Progress Bar */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-white/10">
+                  <div 
+                    className="h-full bg-nexfab-purple transition-all duration-300" 
+                    style={{ 
+                      width: isAutoplaying ? `${((currentDemoIndex / demoQueries.length) * 100) + (typingInProgress ? 5 : demoStage === 'loading' ? 10 : 15) / demoQueries.length}%` : '0%' 
+                    }}
+                  ></div>
+                </div>
+                
                 {isLoading ? (
-                  <div className="flex items-center justify-center h-64">
-                    <div className="animate-pulse text-nexfab-purple">Loading analysis...</div>
+                  <div className="flex items-center justify-center h-[400px]">
+                    <div className="flex flex-col items-center">
+                      <div className="w-12 h-12 border-4 border-nexfab-purple border-t-transparent rounded-full animate-spin"></div>
+                      <p className="mt-4 text-nexfab-purple">Analyzing data...</p>
+                    </div>
                   </div>
                 ) : currentView === 'default' && !activeQuery ? (
-                  <div className="flex flex-col items-center justify-center h-64">
-                    <p className="text-white/70 mb-6">Ask SuperLens AI for business insights or select a query below</p>
+                  <div className="flex flex-col items-center justify-center h-[400px] text-center">
+                    <div className="mb-6">
+                      <div className="w-20 h-20 rounded-full bg-nexfab-purple/20 flex items-center justify-center mx-auto mb-4">
+                        <MessageSquare className="w-10 h-10 text-nexfab-purple" />
+                      </div>
+                      <h3 className="text-xl font-bold">
+                        Ask SuperLens AI Assistant
+                      </h3>
+                      <p className="text-white/70 mt-2 max-w-md mx-auto">
+                        Get instant insights and visualizations from your business data by asking questions in natural language
+                      </p>
+                    </div>
+                    
                     <div className="flex flex-wrap gap-2 justify-center max-w-3xl">
-                      {querySuggestions.map((suggestion, index) => (
+                      {demoQueries.map((suggestion, index) => (
                         <Button 
                           key={index}
                           variant="outline" 
                           className="border-white/20 hover:bg-white/5"
-                          onClick={() => handleQuerySubmit(suggestion)}
+                          onClick={() => {
+                            setCurrentDemoIndex(index);
+                            runQueryDemo(index);
+                          }}
                         >
-                          {suggestion}
+                          {suggestion.query}
                         </Button>
                       ))}
                     </div>
                   </div>
                 ) : currentView === 'revenue' ? (
-                  <div>
-                    <div className="flex items-center mb-2">
+                  <div className="p-4">
+                    <div className="flex items-center mb-3">
                       <div className="w-4 h-4 bg-nexfab-purple rounded-full mr-2"></div>
                       <p className="text-white font-medium">Here's the incremental revenue month on month over the last 6 months:</p>
                     </div>
@@ -220,8 +347,8 @@ const SuperlensAIAssistant = () => {
                     </p>
                   </div>
                 ) : currentView === 'engagement' ? (
-                  <div>
-                    <div className="flex items-center mb-2">
+                  <div className="p-4">
+                    <div className="flex items-center mb-3">
                       <div className="w-4 h-4 bg-nexfab-purple rounded-full mr-2"></div>
                       <p className="text-white font-medium">Here's the customer engagement analysis for last month:</p>
                     </div>
@@ -273,8 +400,8 @@ const SuperlensAIAssistant = () => {
                     </p>
                   </div>
                 ) : (
-                  <div>
-                    <div className="flex items-center mb-2">
+                  <div className="p-4">
+                    <div className="flex items-center mb-3">
                       <div className="w-4 h-4 bg-nexfab-purple rounded-full mr-2"></div>
                       <p className="text-white font-medium">Analysis for: {activeQuery}</p>
                     </div>
@@ -317,28 +444,36 @@ const SuperlensAIAssistant = () => {
               </div>
 
               {/* Query Input Box */}
-              <div className="mt-4">
-                <div className="flex gap-2">
-                  <div className="relative flex-grow">
-                    <Input
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      placeholder="Ask SuperLens AI about your business data..."
-                      className="bg-white/10 border-white/20 pr-10"
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          handleQuerySubmit();
-                        }
-                      }}
-                    />
-                    {query && (
-                      <button 
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
-                        onClick={() => handleQuerySubmit()}
-                      >
-                        <ArrowRight className="w-5 h-5" />
-                      </button>
+              <div className="mt-4 relative">
+                <div className="flex items-center bg-white/10 border border-white/20 rounded-md px-4 py-3 relative">
+                  <div className="flex-grow">
+                    {isAutoplaying ? (
+                      <p className={`${typingInProgress ? 'border-r-2 border-white animate-pulse' : ''}`}>
+                        {displayedQuery}
+                      </p>
+                    ) : (
+                      <Input
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        placeholder="Ask SuperLens AI about your business data..."
+                        className="bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleQuerySubmit();
+                          }
+                        }}
+                      />
                     )}
+                  </div>
+                  <div className="ml-3 flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="icon"
+                      className="rounded-full h-8 w-8 bg-nexfab-purple/20 border-none hover:bg-nexfab-purple/30"
+                      onClick={isAutoplaying ? toggleAutoplay : () => handleQuerySubmit()}
+                    >
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </Button>
                   </div>
                 </div>
               </div>
