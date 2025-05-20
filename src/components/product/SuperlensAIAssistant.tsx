@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { 
   ChartContainer, 
@@ -85,22 +86,22 @@ const chartConfig = {
 const demoQueries = [
   {
     query: "Show me the incremental revenue month by month over the last 6 months",
-    view: 'revenue',
+    view: 'revenue' as const,
     typingTime: 1200
   },
   {
     query: "Analyze customer engagement for last month",
-    view: 'engagement',
+    view: 'engagement' as const,
     typingTime: 1000
   },
   {
     query: "What are the top 3 growth opportunities for my business?",
-    view: 'default',
+    view: 'default' as const,
     typingTime: 1400
   },
   {
     query: "Compare conversion rates between marketing channels",
-    view: 'default',
+    view: 'default' as const,
     typingTime: 1300
   }
 ];
