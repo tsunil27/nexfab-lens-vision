@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ChartContainer, 
   ChartTooltip, 
@@ -15,7 +15,7 @@ import {
   Tooltip,
   Legend
 } from 'recharts';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Table, 
   TableBody, 
@@ -25,7 +25,30 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { BarChart3, LineChart as LineChartIcon, MessageSquare } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { BarChart3, LineChart as LineChartIcon, MessageSquare, Send, ArrowRight } from 'lucide-react';
+
+// Revenue data for chart
+const revenueData = [
+  { month: 'Jan', value: 2500 },
+  { month: 'Feb', value: 6500 },
+  { month: 'Mar', value: 9800 },
+  { month: 'Apr', value: 13500 },
+  { month: 'May', value: 18200 },
+  { month: 'Jun', value: 23400 },
+];
+
+// Engagement data for chart
+const engagementData = [
+  { day: '1', score: 45 },
+  { day: '5', score: 52 },
+  { day: '10', score: 61 },
+  { day: '15', score: 58 },
+  { day: '20', score: 68 },
+  { day: '25', score: 73 },
+  { day: '30', score: 82 },
+];
 
 const data = [
   { month: 'Jan', revenue: 2500, predictions: 2300, insights: 12 },
@@ -52,9 +75,50 @@ const chartConfig = {
     label: 'AI Predictions',
     theme: { light: '#7E69AB', dark: '#7E69AB' },
   },
+  score: {
+    label: 'Score',
+    theme: { light: '#0EA5E9', dark: '#0EA5E9' },
+  },
+  value: {
+    label: 'Value ($)',
+    theme: { light: '#9b87f5', dark: '#9b87f5' },
+  },
 };
 
+// Query suggestions
+const querySuggestions = [
+  "Show me the incremental revenue month by month over the last 6 months",
+  "Analyze customer engagement for last month",
+  "What are the top 3 growth opportunities for my business?",
+  "Compare conversion rates between marketing channels"
+];
+
 const SuperlensAIAssistant = () => {
+  const [query, setQuery] = useState("");
+  const [activeQuery, setActiveQuery] = useState("");
+  const [currentView, setCurrentView] = useState<'revenue' | 'engagement' | 'default'>('default');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handleQuerySubmit = (predefinedQuery = "") => {
+    const queryToProcess = predefinedQuery || query;
+    setIsLoading(true);
+    setActiveQuery(queryToProcess);
+    
+    // Simulate API call with timeout
+    setTimeout(() => {
+      setIsLoading(false);
+      
+      // Simple keyword matching to decide which view to show
+      if (queryToProcess.toLowerCase().includes('revenue')) {
+        setCurrentView('revenue');
+      } else if (queryToProcess.toLowerCase().includes('engagement')) {
+        setCurrentView('engagement');
+      } else {
+        setCurrentView('default');
+      }
+    }, 1500);
+  };
+
   return (
     <section className="py-20 bg-nexfab-darker/50">
       <div className="container mx-auto px-4">
@@ -66,6 +130,221 @@ const SuperlensAIAssistant = () => {
             Intelligent insights and predictions to help you make better business decisions
           </p>
         </div>
+
+        {/* Query Interface */}
+        <Card className="bg-nexfab-dark border-white/10 mb-10">
+          <CardContent className="p-6">
+            <div className="mb-6 rounded-lg bg-white/5 p-4 flex flex-col">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span className="ml-2 font-medium">SuperLens AI Assistant</span>
+                </div>
+              </div>
+              
+              <div className="flex-grow">
+                {isLoading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <div className="animate-pulse text-nexfab-purple">Loading analysis...</div>
+                  </div>
+                ) : currentView === 'default' && !activeQuery ? (
+                  <div className="flex flex-col items-center justify-center h-64">
+                    <p className="text-white/70 mb-6">Ask SuperLens AI for business insights or select a query below</p>
+                    <div className="flex flex-wrap gap-2 justify-center max-w-3xl">
+                      {querySuggestions.map((suggestion, index) => (
+                        <Button 
+                          key={index}
+                          variant="outline" 
+                          className="border-white/20 hover:bg-white/5"
+                          onClick={() => handleQuerySubmit(suggestion)}
+                        >
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                ) : currentView === 'revenue' ? (
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <div className="w-4 h-4 bg-nexfab-purple rounded-full mr-2"></div>
+                      <p className="text-white font-medium">Here's the incremental revenue month on month over the last 6 months:</p>
+                    </div>
+                    <Card className="bg-white/5 border-white/10 mb-6">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm text-white/70">Monthly Revenue (Last 6 Months)</span>
+                          <div className="flex gap-2">
+                            <LineChartIcon className="h-4 w-4 text-white/60" />
+                            <BarChart3 className="h-4 w-4 text-white/60" />
+                          </div>
+                        </div>
+                        <div className="h-64">
+                          <ChartContainer config={chartConfig} className="h-full">
+                            <LineChart data={revenueData} margin={{ top: 10, right: 30, left: 20, bottom: 30 }}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                              <XAxis dataKey="month" stroke="#888" />
+                              <YAxis stroke="#888" tickFormatter={(value) => `$${value}k`} />
+                              <Tooltip content={<ChartTooltipContent />} />
+                              <Line 
+                                type="monotone" 
+                                dataKey="value" 
+                                name="value" 
+                                stroke="#9b87f5" 
+                                strokeWidth={2} 
+                                dot={{ r: 4 }}
+                                activeDot={{ r: 6 }} 
+                              />
+                            </LineChart>
+                          </ChartContainer>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <p className="text-white/70 text-xs mb-1">Overall Growth</p>
+                        <p className="text-green-400 font-bold text-xl">+94.4%</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <p className="text-white/70 text-xs mb-1">Avg. Monthly Growth</p>
+                        <p className="text-green-400 font-bold text-xl">+14.2%</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <p className="text-white/70 text-xs mb-1">Projection Next Month</p>
+                        <p className="text-green-400 font-bold text-xl">$27.1k</p>
+                      </div>
+                    </div>
+                    <p className="text-white/70 text-sm">
+                      The data shows consistent revenue growth over the past 6 months. Would you like me to analyze specific growth factors?
+                    </p>
+                  </div>
+                ) : currentView === 'engagement' ? (
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <div className="w-4 h-4 bg-nexfab-purple rounded-full mr-2"></div>
+                      <p className="text-white font-medium">Here's the customer engagement analysis for last month:</p>
+                    </div>
+                    <Card className="bg-white/5 border-white/10 mb-6">
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm text-white/70">Daily Engagement Score (Last Month)</span>
+                          <div>
+                            <LineChartIcon className="h-4 w-4 text-white/60" />
+                          </div>
+                        </div>
+                        <div className="h-64">
+                          <ChartContainer config={chartConfig} className="h-full">
+                            <LineChart data={engagementData} margin={{ top: 10, right: 30, left: 20, bottom: 30 }}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                              <XAxis dataKey="day" stroke="#888" />
+                              <YAxis stroke="#888" domain={[0, 100]} />
+                              <Tooltip content={<ChartTooltipContent />} />
+                              <Line 
+                                type="monotone" 
+                                dataKey="score" 
+                                name="score" 
+                                stroke="#0EA5E9" 
+                                strokeWidth={2} 
+                                dot={{ r: 4 }}
+                                activeDot={{ r: 6 }} 
+                              />
+                            </LineChart>
+                          </ChartContainer>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <div className="grid grid-cols-3 gap-4 mb-4">
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <p className="text-white/70 text-xs mb-1">Overall Increase</p>
+                        <p className="text-green-400 font-bold text-xl">+82.2%</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <p className="text-white/70 text-xs mb-1">Active Users</p>
+                        <p className="text-green-400 font-bold text-xl">+28.5%</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-3">
+                        <p className="text-white/70 text-xs mb-1">Session Duration</p>
+                        <p className="text-green-400 font-bold text-xl">+12.3%</p>
+                      </div>
+                    </div>
+                    <p className="text-white/70 text-sm">
+                      Customer engagement has shown a significant improvement in the last month. The trend indicates increasing user interaction.
+                    </p>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex items-center mb-2">
+                      <div className="w-4 h-4 bg-nexfab-purple rounded-full mr-2"></div>
+                      <p className="text-white font-medium">Analysis for: {activeQuery}</p>
+                    </div>
+                    <div className="h-72">
+                      <ChartContainer config={chartConfig} className="h-full">
+                        <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                          <XAxis dataKey="month" stroke="#888" />
+                          <YAxis stroke="#888" />
+                          <Tooltip content={<ChartTooltipContent />} />
+                          <Legend />
+                          <Line 
+                            type="monotone" 
+                            dataKey="revenue" 
+                            name="revenue" 
+                            stroke="#9b87f5" 
+                            strokeWidth={2} 
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }} 
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="predictions" 
+                            name="predictions" 
+                            stroke="#7E69AB" 
+                            strokeWidth={2} 
+                            strokeDasharray="5 5"
+                            dot={{ r: 4 }} 
+                          />
+                        </LineChart>
+                      </ChartContainer>
+                    </div>
+                    <div className="mt-4">
+                      <p className="text-white/70 text-sm">
+                        Based on your query, here's an analysis of relevant metrics. Would you like to explore more specific aspects?
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Query Input Box */}
+              <div className="mt-4">
+                <div className="flex gap-2">
+                  <div className="relative flex-grow">
+                    <Input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Ask SuperLens AI about your business data..."
+                      className="bg-white/10 border-white/20 pr-10"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleQuerySubmit();
+                        }
+                      }}
+                    />
+                    {query && (
+                      <button 
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
+                        onClick={() => handleQuerySubmit()}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
           <Card className="bg-nexfab-dark border-white/10 col-span-2">
