@@ -9,6 +9,7 @@ import DashboardDemo from '@/components/product/DashboardDemo';
 import PricingSection from '@/components/product/PricingSection';
 import ProductCTA from '@/components/product/ProductCTA';
 import SuperlensAIAssistant from '@/components/product/SuperlensAIAssistant';
+import IntegrationsSection from '@/components/product/IntegrationsSection';
 
 const ProductDetails = () => {
   return (
@@ -29,6 +30,9 @@ const ProductDetails = () => {
 
         {/* Dashboard Demo Section */}
         <DashboardDemo />
+
+        {/* Integrations Section */}
+        <IntegrationsSection />
 
         {/* Pricing Section */}
         <PricingSection />
