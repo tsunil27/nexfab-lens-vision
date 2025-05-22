@@ -11,8 +11,15 @@ const Header = () => {
     <header className="fixed w-full top-0 z-50 bg-nexfab-darker/90 backdrop-blur-sm border-b border-white/10">
       <div className="container mx-auto flex justify-between items-center h-16 px-4">
         <div className="flex items-center space-x-2">
-          <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-nexfab-purple to-nexfab-purple-light bg-clip-text text-transparent">
-            Nexfab.ai
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/lovable-uploads/b6ae6d47-33d5-4fde-b284-aa975447ed49.png" 
+              alt="Nexfab.ai Logo" 
+              className="h-8 mr-2"
+            />
+            <span className="text-2xl font-bold bg-gradient-to-r from-nexfab-purple to-nexfab-purple-light bg-clip-text text-transparent">
+              Nexfab.ai
+            </span>
           </Link>
         </div>
 
