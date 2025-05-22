@@ -20,8 +20,11 @@ const IntegrationSection = () => {
         <div className="flex flex-col gap-8">
           <div className="bg-white/5 p-10 rounded-2xl border border-white/10 backdrop-blur-sm">
             <h3 className="text-2xl font-bold mb-6 text-center">
-              Agentic app allowing human feedback loop to learn and fine tune our AI model.
+              Integrate with popular data sources and platforms
             </h3>
+            <p className="text-center text-white/80 mb-6">
+              Connect SuperLens with your existing data infrastructure to unlock powerful insights instantly
+            </p>
           </div>
           
           {/* Integration logos */}
