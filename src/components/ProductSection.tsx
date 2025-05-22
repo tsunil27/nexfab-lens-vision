@@ -11,6 +11,13 @@ const ProductSection = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
+          <div className="mx-auto mb-4 flex justify-center">
+            <img
+              src="/lovable-uploads/b6ae6d47-33d5-4fde-b284-aa975447ed49.png"
+              alt="Nexfab Agentic AI"
+              className="h-16 md:h-20 object-contain"
+            />
+          </div>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             Introducing <span className="gradient-text">Superlens.ai</span>
           </h2>
@@ -72,15 +79,17 @@ const ProductSection = () => {
             <div className="p-4 bg-nexfab-darker rounded-xl border border-white/10 overflow-hidden relative">
               <div className="aspect-square md:aspect-video bg-gradient-to-br from-nexfab-purple/20 to-nexfab-purple-dark/20 rounded-lg overflow-hidden flex items-center justify-center">
                 <div className="relative w-4/5 h-4/5">
-                  {/* Product mockup/illustration placeholder */}
+                  {/* Product mockup with Superlens logo */}
                   <div className="w-full h-full bg-nexfab-dark rounded-lg border border-white/10 shadow-lg flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-nexfab-purple/10 to-nexfab-purple-dark/20 animate-gradient-flow"></div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center p-6">
-                        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-nexfab-purple/30 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                          </svg>
+                        <div className="w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                          <img
+                            src="/lovable-uploads/f9b176b0-c036-42d9-9ab5-07f83cf59e18.png"
+                            alt="Superlens.ai Logo"
+                            className="w-full h-full object-contain"
+                          />
                         </div>
                         <h3 className="text-xl font-bold mb-2 gradient-text">Superlens.ai</h3>
                         <p className="text-white/70">Intelligent Analytics Platform</p>

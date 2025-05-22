@@ -30,8 +30,12 @@ const Products = () => {
               </CardHeader>
               <CardContent>
                 <div className="mb-4 rounded-lg overflow-hidden">
-                  <div className="aspect-video bg-nexfab-purple/20 rounded-lg flex items-center justify-center">
-                    <div className="text-nexfab-purple text-4xl font-bold">Superlens.ai</div>
+                  <div className="aspect-video bg-nexfab-purple/20 rounded-lg flex items-center justify-center p-4">
+                    <img
+                      src="/lovable-uploads/f9b176b0-c036-42d9-9ab5-07f83cf59e18.png"
+                      alt="Superlens.ai Logo"
+                      className="max-h-32 object-contain"
+                    />
                   </div>
                 </div>
                 <p className="text-white/70">

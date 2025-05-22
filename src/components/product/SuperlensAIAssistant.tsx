@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   ChartContainer, 
@@ -212,6 +211,13 @@ const SuperlensAIAssistant = () => {
     <section className="py-20 bg-nexfab-darker/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
+          <div className="flex justify-center mb-4">
+            <img
+              src="/lovable-uploads/f9b176b0-c036-42d9-9ab5-07f83cf59e18.png"
+              alt="Superlens.ai Logo"
+              className="h-16 object-contain"
+            />
+          </div>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             SuperLens AI Assistant
           </h2>
@@ -251,7 +257,7 @@ const SuperlensAIAssistant = () => {
                   <div 
                     className="h-full bg-nexfab-purple transition-all duration-300" 
                     style={{ 
-                      width: isAutoplaying ? `${((currentDemoIndex / demoQueries.length) * 100) + (typingInProgress ? 5 : demoStage === 'loading' ? 10 : 15) / demoQueries.length}%` : '0%' 
+                      width: isAutoplaying ? `${((currentDemoIndex / demoQueries.length) * 100) + (typingInProgress ? 5 : demoStage === 'loading' ? 15 : 20) / demoQueries.length}%` : '0%' 
                     }}
                   ></div>
                 </div>
@@ -599,6 +605,13 @@ const SuperlensAIAssistant = () => {
         </Card>
 
         <div className="bg-nexfab-dark border border-white/10 rounded-xl p-6 text-center">
+          <div className="flex justify-center mb-4">
+            <img
+              src="/lovable-uploads/b6ae6d47-33d5-4fde-b284-aa975447ed49.png"
+              alt="Nexfab Agentic AI"
+              className="h-12 object-contain"
+            />
+          </div>
           <h3 className="text-xl font-bold mb-4">Experience the power of AI-driven business insights</h3>
           <p className="text-white/70 mb-6 max-w-2xl mx-auto">
             SuperLens AI Assistant continuously analyzes your business data to provide actionable recommendations and predict future trends.
